@@ -17,7 +17,7 @@ public class ContactHandler  {
         this.mContext = mContext;
     }
     /**
-     * 备份联系人信息
+     * 获取联系人信息
      *
      * */
     public ArrayList<Contacts> getContactsFromPhone () {
