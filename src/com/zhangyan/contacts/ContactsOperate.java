@@ -11,9 +11,9 @@ import java.util.ArrayList;
 /**
  * Created by ku on 2015/1/10.
  */
-public class ContactHandler  {
+public class ContactsOperate {
     private Context mContext;
-    public ContactHandler(Context mContext) {
+    public ContactsOperate(Context mContext) {
         this.mContext = mContext;
     }
     /**
@@ -33,6 +33,7 @@ public class ContactHandler  {
             contact.setId(cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID)));
             /* 获取联系人姓名 */
             contact.setName(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+
             /* -----------------------获取联系人电话码号--------------------------------- */
             /* 判断有没有电话号码 */
             if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
