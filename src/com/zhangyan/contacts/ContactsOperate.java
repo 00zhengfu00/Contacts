@@ -33,7 +33,8 @@ public class ContactsOperate {
             contact.setId(cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID)));
             /* 获取联系人姓名 */
             contact.setName(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
-
+//            /* 获取头像id */
+//            Cursor photoCursor = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Photo.CONTACT_ID + "=" + contact.getId(), null, null);
             /* -----------------------获取联系人电话码号--------------------------------- */
             /* 判断有没有电话号码 */
             if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
@@ -51,20 +52,20 @@ public class ContactsOperate {
                     );
                 }
             }
-            /* --------------------------获取联系人邮件------------------------------- */
-            Cursor emailCur = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contact.getId(), null, null);
-            /* 遍历所有邮件 */
-            while(emailCur.moveToNext()){
-                /* 获取邮件信息 */
-                contact.getEmail().add(
-                        new Attribute(
-                             /* 获取邮件 */
-                                emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA1)),
-                             /* 获取邮件的类型 */
-                                emailCur.getInt(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE))
-                        )
-                );
-            }
+//            /* --------------------------获取联系人邮件------------------------------- */
+//            Cursor emailCur = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contact.getId(), null, null);
+//            /* 遍历所有邮件 */
+//            while(emailCur.moveToNext()){
+//                /* 获取邮件信息 */
+//                contact.getEmail().add(
+//                        new Attribute(
+//                             /* 获取邮件 */
+//                                emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA1)),
+//                             /* 获取邮件的类型 */
+//                                emailCur.getInt(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE))
+//                        )
+//                );
+//            }
         contactses.add(contact);
         }
     return contactses;
