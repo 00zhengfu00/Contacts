@@ -1,6 +1,8 @@
 package com.zhangyan.contacts.data;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 
 import java.io.File;
@@ -8,7 +10,7 @@ import java.io.File;
 /**
  * Created by ku on 2015/1/11.
  */
-public class DataBase// 继承SQLiteOpenHelper类
+public class DataBase extends SQLiteOpenHelper// 继承SQLiteOpenHelper类
     {
 
         // 数据库版本号
@@ -29,6 +31,11 @@ public class DataBase// 继承SQLiteOpenHelper类
 
 
         private SQLiteDatabase db;
+
+        public DataBase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+            super(context, name, factory, version);
+        }
+
         /**
          *
          * 在sd卡上创建数据库
@@ -38,20 +45,11 @@ public class DataBase// 继承SQLiteOpenHelper类
             /* 判断sd卡是否存在 */
             if( checkSDCard() ) {
                 createPath();
-                creatDB();
             } else { //
                 return false;
             }
             return true;
         }
-        /**
-         * 创建数据库
-         *
-         * */
-        private void creatDB() {
-//            setDb(SQLiteDatabase.openOrCreateDatabase());
-        }
-
         /**
          *
          * 创建数据库在sd卡上的目录
@@ -115,5 +113,15 @@ public class DataBase// 继承SQLiteOpenHelper类
 
         public void setDb(SQLiteDatabase db) {
             this.db = db;
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         }
     }
