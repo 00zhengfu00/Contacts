@@ -12,15 +12,11 @@ import java.util.ArrayList;
  * Created by ku on 2015/1/10.
  */
 public class ContactsOperate {
-    private Context mContext;
-    public ContactsOperate(Context mContext) {
-        this.mContext = mContext;
-    }
     /**
      * 获取联系人信息
      *
      * */
-    public ArrayList<Contacts> getContactsFromPhone () {
+    public static ArrayList<Contacts> getContactsFromPhone (Context mContext) {
         ArrayList<Contacts> contactses = new ArrayList<Contacts>();
         /* 获取所有联系人的信息 */
         Cursor cur = mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -37,7 +33,8 @@ public class ContactsOperate {
 //            Cursor photoCursor = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Photo.CONTACT_ID + "=" + contact.getId(), null, null);
             /* -----------------------获取联系人电话码号--------------------------------- */
             /* 判断有没有电话号码 */
-            if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+            contact.setPhoneId(cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+            if (contact.getPhoneId() > 0) {
                 /* 有电话号码 */
                 Cursor phonesCursor = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contact.getId(), null, null);
                 while(phonesCursor.moveToNext()){

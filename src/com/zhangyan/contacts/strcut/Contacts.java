@@ -14,6 +14,7 @@ public class Contacts {
     /* 联系人头像 */
     private Photo photo;
     /* 联系人电话信息 */
+    private int phoneId;
     private ArrayList<Attribute> phone;
     /* 联系人邮件信息 */
     private ArrayList<Attribute> email;
@@ -29,6 +30,7 @@ public class Contacts {
         setEmail(new ArrayList<Attribute>());
         setAddress(new ArrayList<Attribute>());
         setGroup("");
+        setPhoneId(0);
     }
 
     public String getName() {
@@ -86,5 +88,13 @@ public class Contacts {
 
     public void setPhoto(Photo photo) {
         this.photo = photo;
+    }
+
+    public int getPhoneId() {
+        return phoneId;
+    }
+
+    public void setPhoneId(int phoneId) {
+        this.phoneId = phoneId;
     }
 }

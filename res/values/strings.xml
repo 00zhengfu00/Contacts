@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Contacts</string>
+    <string name="import_btn">导入联系人</string>
+    <string name="export_btn">导出联系人</string>
+    <string name="quit_btn">退出</string>
+    <string name="importing">正在导入联系人</string>
+    <string name="exporting">正在导出联系人</string>
 </resources>
