@@ -54,6 +54,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 contactsData.addContacts(contactses.get(i), i + 1);
                 progressDialog.incrementProgressBy(1);
             }
+            progressDialog.dismiss();
+            Constans.showToast(this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
         }
     }
     private void importContacts(){

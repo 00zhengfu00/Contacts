@@ -3,9 +3,9 @@ package com.zhangyan.contacts;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.widget.Toast;
 import com.zhangyan.contacts.strcut.Attribute;
 import com.zhangyan.contacts.strcut.Contacts;
+
 import java.util.ArrayList;
 
 /**
@@ -20,7 +20,6 @@ public class ContactsOperate {
         ArrayList<Contacts> contactses = new ArrayList<Contacts>();
         /* 获取所有联系人的信息 */
         Cursor cur = mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        Toast.makeText(mContext, cur.getCount() + "", Toast.LENGTH_SHORT).show();
         /* 遍历所有联系人 */
         while(cur.moveToNext()) {
             /* 新家一个联系人 */

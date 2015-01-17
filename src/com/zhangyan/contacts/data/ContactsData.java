@@ -75,7 +75,6 @@ public class ContactsData {
         sBuffer.append(CONTACT_PHONE_ID_INDEX + " INTEGER)");
         // 执行创建表的SQL语句
         db.execSQL(sBuffer.toString());
-        Constans.showToast(mContext, "创建联系人");
     }
 
     /**
