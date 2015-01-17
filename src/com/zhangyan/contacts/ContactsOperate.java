@@ -2,6 +2,7 @@ package com.zhangyan.contacts;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import com.zhangyan.contacts.strcut.Attribute;
 import com.zhangyan.contacts.strcut.Contacts;
@@ -16,7 +17,7 @@ public class ContactsOperate {
      * 获取联系人信息
      *
      * */
-    public static ArrayList<Contacts> getContactsFromPhone (Context mContext) {
+    public static ArrayList<Contacts> getContactsFromPhone (Context mContext, Handler handler) {
         ArrayList<Contacts> contactses = new ArrayList<Contacts>();
         /* 获取所有联系人的信息 */
         Cursor cur = mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -63,6 +64,7 @@ public class ContactsOperate {
 //                );
 //            }
         contactses.add(contact);
+            Constans.sendMessage(Constans.PROGRESS_MAX, handler);
         }
     return contactses;
     }

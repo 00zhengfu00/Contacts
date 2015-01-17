@@ -4,12 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.os.Handler;
 import com.zhangyan.contacts.Constans;
 import com.zhangyan.contacts.strcut.Attribute;
 import com.zhangyan.contacts.strcut.Contacts;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by ku on 2015/1/12.
@@ -30,20 +32,30 @@ public class ContactsData {
     public static final String CONTACTS_BACKUP = "backup" + File.separator;
 
     private SQLiteDatabase db; //
+    private Handler handler;
     private Context mContext;
     private String dbName = "contacts.db"; // 数据库名称
     private File dbFile;
 
-    public ContactsData(Context mContext) {
+    public ContactsData(Context mContext, Handler handler) {
         this.mContext = mContext;
+        this.handler = handler;
         dbFile = new File(SDCARD_PATH + CONTACTS_HELPER + CONTACTS_BACKUP + dbName);
     }
 
-    public void openDb() {
-        if(createPath()) {
-            db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
-            createTable();
+    public Boolean openDb() {
+        if(sdCardExist()) {
+            if (createPath()) {
+                db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+                createTable();
+            } else {
+                return false;
+            }
+        } else {
+            Constans.showToast(mContext, "需要SD卡才能备份！");
+            return false;
         }
+        return true;
     }
 
     public Boolean checkIsImport() {
@@ -92,25 +104,29 @@ public class ContactsData {
         db.execSQL(sBuffer.toString());
     }
 
-    public void addContacts(Contacts contacts, int ContactIndex) {
+    public void addContacts(ArrayList<Contacts> contacts) {
         db.beginTransaction();
         try {
+            for(int i = 0; i < contacts.size(); i ++) {
                 db.execSQL("INSERT INTO " + CONTACT + " VALUES(null, ?, ?) ",
                         new Object[]{
-                                contacts.getName(),
-                                contacts.getPhoneId()
+                                contacts.get(i).getName(),
+                                contacts.get(i).getPhoneId()
                         });
-                if (contacts.getPhoneId() > 0) {
-                    for (Attribute phone : contacts.getPhone()) {
+                if (contacts.get(i).getPhoneId() > 0) {
+                    for (Attribute phone : contacts.get(i).getPhone()) {
                         db.execSQL("INSERT INTO " + CONTACT_PHONE + " VALUES(null, ?, ?, ?)",
                                 new Object[]{
-                                        ContactIndex,
+                                        i + 1,
                                         phone.getType(),
                                         phone.getValue()
                                 });
                     }
                 }
+                Constans.sendMessage(Constans.EXPORT, handler);
+            }
             db.setTransactionSuccessful();  //设置事务成功完成
+            Constans.sendMessage(Constans.PROGRESS_DISMISS, handler);
         } finally {
             db.endTransaction();
         }
@@ -142,5 +158,16 @@ public class ContactsData {
         }
         return true;
     }
+    /**
+     * check sdCard
+     * */
+    private Boolean sdCardExist(){
+        String status = Environment.getExternalStorageState();
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            return true;
+        } else {
+            return false;
+        }
 
+    }
 }

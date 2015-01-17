@@ -3,6 +3,8 @@ package com.zhangyan.contacts;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -10,9 +12,6 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.zhangyan.contacts.data.ContactsData;
-import com.zhangyan.contacts.strcut.Contacts;
-
-import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
     /**
@@ -35,43 +34,63 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        contactsData = new ContactsData(this);
+        contactsData = new ContactsData(this, handler);
         initView();
     }
 
     private void initView() {
+        /* 诸如试图 */
         ButterKnife.inject(this);
+        /* 为控件设置点击事件 */
         exporttn.setOnClickListener(this);
         importBtn.setOnClickListener(this);
         quitBtn.setOnClickListener(this);
-    }
-    private void exportContacts(){
-        contactsData.openDb();
-        if(contactsData.checkIsImport()) {
-            ArrayList<Contacts> contactses = ContactsOperate.getContactsFromPhone(this);
-            showProgressBar(EXPORT, contactses.size());
-            for(int i = 0; i < contactses.size(); i ++){
-                contactsData.addContacts(contactses.get(i), i + 1);
-                progressDialog.incrementProgressBy(1);
-            }
-            progressDialog.dismiss();
-            Constans.showToast(this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
-        }
-    }
-    private void importContacts(){
+        /* 初始progressDialog */
 
     }
-    private void showProgressBar(int type, int max){
-        progressDialog = new ProgressDialog(this);
+    Handler handler = new Handler(){
+        public void handleMessage(Message message){
+            switch(message.what){
+                case Constans.PROGRESS_MAX:
+                    progressDialog.setMax(progressDialog.getMax() + 1);
+                    break;
+                case Constans.EXPORT:
+                    progressDialog.incrementProgressBy(1);
+                    break;
+                case Constans.PROGRESS_DISMISS:
+                    progressDialog.dismiss();
+                    Constans.showToast(MainActivity.this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
+                    break;
+                default :
+                    break;
+            }
+        }
+    };
+    private void exportContacts(){
+       if( contactsData.openDb()) {
+           if (contactsData.checkIsImport()) {
+               progressDialog = getProgressBar();
+               progressDialog.show();
+               contactsData.addContacts(ContactsOperate.getContactsFromPhone(this, handler));
+           } else {
+               Constans.showToast(this, "已经导出！");
+           }
+       }
+    }
+    private void importContacts(){
+        if(contactsData.openDb()) {
+            if (contactsData.checkIsImport()) {
+
+            } else {
+
+            }
+        }
+    }
+    private ProgressDialog getProgressBar(){
+        ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
-        if(type == IMPORT) {
-            progressDialog.setMessage(getResources().getString(R.string.importing));
-        } else {
-            progressDialog.setMessage(getResources().getString(R.string.exporting));
-        }
-        progressDialog.setMax(max);
-        progressDialog.show();
+        return progressDialog;
     }
     @Override
     public void onClick(View v) {
