@@ -19,13 +19,13 @@ import java.util.ArrayList;
 public class ContactsData {
     /* 联系人表 */
     public static final String CONTACT = "contacts"; // 表名
-    public static final String CONTACT_NAME = "cname"; // 联系人姓名
-    public static final String CONTACT_PHONE_ID_INDEX = "cpid"; // 联系人电话id
+    public static final String CONTACT_NAME = "c_name"; // 联系人姓名
+    public static final String CONTACT_PHONE_ID_INDEX = "c_phone_count"; // 联系人电话id
     /* 联系人电话表 */
     public static final String CONTACT_PHONE = "phone"; // 联系人电话表名
-    private static final String CONTACT_ID = "cid"; // 联系人id
-    private static final String CONTACT_PHONE_TYPE = "ptype"; // 电话类型
-    private static final String CONTACT_PHONE_NUMBER = "pnumber"; // 电话号码
+    private static final String CONTACT_ID = "c_id"; // 联系人id
+    private static final String CONTACT_PHONE_TYPE = "p_type"; // 电话类型
+    private static final String CONTACT_PHONE_NUMBER = "p_number"; // 电话号码
     /* sdcard */
     public static final String SDCARD_PATH = Environment.getExternalStorageDirectory() + File.separator;
     public static final String CONTACTS_HELPER = "Contacts" + File.separator; //一级目录
@@ -75,7 +75,10 @@ public class ContactsData {
         createContactTable();
         createPhoneTable();
     }
-
+    public void deleteTable(){
+        db.execSQL("drop table " + CONTACT);
+        db.execSQL("drop table " + CONTACT_PHONE);
+    }
     /**
      * 创建联系人表
      */

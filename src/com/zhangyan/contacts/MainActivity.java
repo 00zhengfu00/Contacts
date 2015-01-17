@@ -1,7 +1,9 @@
 package com.zhangyan.contacts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -73,7 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                progressDialog.show();
                contactsData.addContacts(ContactsOperate.getContactsFromPhone(this, handler));
            } else {
-               Constans.showToast(this, "已经导出！");
+               showDialog("联系人已经导出，是否需要更新？");
            }
        }
     }
@@ -82,9 +84,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (contactsData.checkIsImport()) {
 
             } else {
-
+                progressDialog = getProgressBar();
+                progressDialog.show();
             }
         }
+    }
+    private void showDialog(String title){
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        contactsData.deleteTable();
+                        exportContacts();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
+
+
     }
     private ProgressDialog getProgressBar(){
         ProgressDialog progressDialog = new ProgressDialog(this);
