@@ -1,7 +1,10 @@
 package com.zhangyan.contacts;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import com.zhangyan.contacts.strcut.Attribute;
@@ -69,4 +72,36 @@ public class ContactsOperate {
     return contactses;
     }
 
+    public static void saveContacts(Context mContext, ArrayList<Contacts> contactses, Handler handler){
+        for(Contacts contacts : contactses) {
+            ContentValues contentValues = new ContentValues();
+            //首先向RawContacts.CONTENT_URI执行一个空值插入，目的是获取系统返回的rawContactId
+            Uri rawContactUri = mContext.getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, contentValues);
+            long rawContactId = ContentUris.parseId(rawContactUri);
+            /* 存入联系人的姓名 */
+            contentValues.clear();
+            contentValues.put(ContactsContract.RawContacts.Data.RAW_CONTACT_ID, rawContactId);
+            contentValues.put(ContactsContract.RawContacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+            contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contacts.getName());
+            mContext.getContentResolver().insert(
+                    android.provider.ContactsContract.Data.CONTENT_URI, contentValues);
+            /* 存入联系人电话 */
+            /* 判断该联系人是否有电话 */
+            if (contacts.getPhoneId() > 0) { //
+                for (Attribute phone : contacts.getPhone()) {
+                    contentValues.clear();
+                    contentValues.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
+                    contentValues.put(ContactsContract.RawContacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                    // 设置录入联系人电话信息
+                    contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, phone.getValue());
+                    contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, phone.getType());
+                    // 往data表入电话数据
+                    mContext.getContentResolver().insert(
+                            android.provider.ContactsContract.Data.CONTENT_URI, contentValues);
+                }
+            }
+            Constans.sendMessage(Constans.PROGRESS_INC, handler);
+        }
+        Constans.sendMessage(Constans.PROGRESS_DISMISS, handler);
+    }
 }

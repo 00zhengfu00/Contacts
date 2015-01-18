@@ -57,6 +57,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     progressDialog.setMax(message.getData().getInt("max"));
                     break;
                 case Constans.EXPORT:
+
+                    break;
+                case Constans.IMPORT:
+                    progressDialog.setMessage("正在导入联系人..");
+                    break;
+                case Constans.PROGRESS_INC:
                     progressDialog.incrementProgressBy(1);
                     break;
                 case Constans.PROGRESS_DISMISS:
@@ -72,7 +78,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
        if( contactsData.openDb()) {
            if (contactsData.checkIsImport()) {
                progressDialog = getProgressBar();
-               progressDialog.setMessage("正在读取联系人..");
                progressDialog.show();
                new Thread() {
                    public void run() {
@@ -87,10 +92,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void importContacts(){
         if(contactsData.openDb()) {
             if (contactsData.checkIsImport()) {
-
+                showDialog("联系人还未导出，是否导出？");
             } else {
                 progressDialog = getProgressBar();
                 progressDialog.show();
+                new Thread() {
+                    public void run() {
+                       ContactsOperate.saveContacts(MainActivity.this, contactsData.getContactsFromDb(), handler);
+                    }
+                }.start();
             }
         }
     }
@@ -115,6 +125,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        progressDialog.setMessage("正在读取联系人..");
         progressDialog.setMax(0);
         return progressDialog;
     }

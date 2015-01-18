@@ -44,20 +44,27 @@ public class ContactsData {
     }
 
     public Boolean openDb() {
-        if(sdCardExist()) {
+        /* 判断sd卡是否存在 */
+        if(sdCardExist()) { // 存在sd卡才能导出
             if (createPath()) {
+                /* 从文件打开数据库 */
                 db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+                /* 创建数据表 */
                 createTable();
             } else {
                 return false;
             }
-        } else {
+        } else { // 不存在sd卡给用户提示
             Constans.showToast(mContext, "需要SD卡才能备份！");
             return false;
         }
         return true;
     }
-
+    /**
+     *
+     * 判断打开的数据库中是否已经存在导出的联系人信息
+     *
+     * */
     public Boolean checkIsImport() {
         Boolean check = true;
         Cursor c = db.rawQuery("SELECT count(*) FROM sqlite_sequence where name = ?", //
@@ -75,6 +82,11 @@ public class ContactsData {
         createContactTable();
         createPhoneTable();
     }
+    /**
+     *
+     * 删除数据表
+     *
+     * */
     public void deleteTable(){
         db.execSQL("drop table " + CONTACT);
         db.execSQL("drop table " + CONTACT_PHONE);
@@ -106,7 +118,12 @@ public class ContactsData {
         // 执行创建表的SQL语句
         db.execSQL(sBuffer.toString());
     }
-
+    /**
+     *
+     * 把联系人信息存入数据库
+     *
+     *
+     * */
     public void addContacts(ArrayList<Contacts> contacts) {
         db.beginTransaction();
         try {
@@ -134,7 +151,37 @@ public class ContactsData {
             db.endTransaction();
         }
     }
-
+    /**
+     *
+     * 从数据库中读取联系人信息
+     *
+     * */
+    public ArrayList<Contacts> getContactsFromDb(){
+        ArrayList<Contacts> contactses = new ArrayList<Contacts>();
+        /* 从联系人表中读取联系人信息 */
+        Cursor c = db.rawQuery("select * from " + CONTACT , null);
+        for(int i = 1; c.moveToNext(); i ++){
+            Contacts contacts = new Contacts();
+            contacts.setName(c.getString(c.getColumnIndex(CONTACT_NAME))); // 联系人姓名
+            contacts.setPhoneId(c.getInt(c.getColumnIndex(CONTACT_PHONE_ID_INDEX))); // 联系人电话ID
+            /* 判断联系人是否有电话 */
+            if(contacts.getPhoneId() > 0) {
+                Cursor cursor = db.rawQuery("select * from " + CONTACT_PHONE + " where c_id = ?", new String[]{i + ""});
+                while (cursor.moveToNext()){
+                    contacts.getPhone().add(
+                            new Attribute(
+                                    cursor.getString(cursor.getColumnIndex(CONTACT_PHONE_NUMBER)),
+                                    cursor.getInt(cursor.getColumnIndex(CONTACT_PHONE_TYPE))
+                            )
+                    );
+                }
+            }
+            contactses.add(contacts);
+            Constans.sendMessage(Constans.PROGRESS_MAX, handler, i);
+        }
+        Constans.sendMessage(Constans.IMPORT, handler);
+        return contactses;
+    }
     /**
      * 创建数据库在sd卡上的目录
      */
