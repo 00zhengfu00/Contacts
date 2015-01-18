@@ -48,7 +48,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         ButterKnife.inject(this);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         setTitle(getResources().getString(R.string.app_name));
         /* 为控件设置点击事件 */
