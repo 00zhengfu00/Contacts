@@ -131,6 +131,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        progressDialog.setCancelable(false);
         progressDialog.setMessage("正在读取联系人..");
         progressDialog.setMax(0);
         return progressDialog;
