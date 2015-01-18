@@ -64,7 +64,7 @@ public class ContactsOperate {
 //                );
 //            }
         contactses.add(contact);
-            Constans.sendMessage(Constans.PROGRESS_MAX, handler);
+        Constans.sendMessage(Constans.PROGRESS_MAX, handler, contactses.size());
         }
     return contactses;
     }

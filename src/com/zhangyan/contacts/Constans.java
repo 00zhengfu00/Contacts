@@ -1,6 +1,7 @@
 package com.zhangyan.contacts;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -29,8 +30,16 @@ public class Constans {
         }
     }
     public static void sendMessage(int what, Handler handler){
+        sendMessage(what, handler, 0);
+    }
+    public static void sendMessage(int what, Handler handler, int max){
         Message message = new Message();
         message.what = what;
+        if(max != 0) {
+            Bundle data = new Bundle();
+            data.putInt("max", max);
+            message.setData(data);
+        }
         handler.sendMessage(message);
     }
 }

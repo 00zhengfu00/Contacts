@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         public void handleMessage(Message message){
             switch(message.what){
                 case Constans.PROGRESS_MAX:
-                    progressDialog.setMax(progressDialog.getMax() + 1);
+                    progressDialog.setMax(message.getData().getInt("max"));
                     break;
                 case Constans.EXPORT:
                     progressDialog.incrementProgressBy(1);
@@ -72,8 +72,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
        if( contactsData.openDb()) {
            if (contactsData.checkIsImport()) {
                progressDialog = getProgressBar();
+               progressDialog.setMessage("正在读取联系人..");
                progressDialog.show();
-               contactsData.addContacts(ContactsOperate.getContactsFromPhone(this, handler));
+               new Thread() {
+                   public void run() {
+                       contactsData.addContacts(ContactsOperate.getContactsFromPhone(MainActivity.this, handler));
+                   }
+               }.start();
            } else {
                showDialog("联系人已经导出，是否需要更新？");
            }
@@ -105,13 +110,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
                 })
                 .show();
-
-
     }
     private ProgressDialog getProgressBar(){
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        progressDialog.setMax(0);
         return progressDialog;
     }
     @Override
