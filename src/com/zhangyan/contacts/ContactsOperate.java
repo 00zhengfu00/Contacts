@@ -26,7 +26,7 @@ public class ContactsOperate {
         Cursor cur = mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         /* 遍历所有联系人 */
         while(cur.moveToNext()) {
-            /* 新家一个联系人 */
+            /* 新家一个联系人实例 */
             Contacts contact = new Contacts();
             /* 获取联系人id */
             contact.setId(cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID)));

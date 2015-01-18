@@ -32,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button quitBtn;
     private ProgressBar progressBar;
     private TextView msg;
+    private int opreate ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +42,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        /* 诸如试图 */
+        /* 注入视图 */
         ButterKnife.inject(this);
         /* 为控件设置点击事件 */
         exporttn.setOnClickListener(this);
         importBtn.setOnClickListener(this);
         quitBtn.setOnClickListener(this);
-        /* 初始progressDialog */
-
     }
+
     Handler handler = new Handler(){
         public void handleMessage(Message message){
             switch(message.what){
@@ -67,7 +67,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     break;
                 case Constans.PROGRESS_DISMISS:
                     progressDialog.dismiss();
-                    Constans.showToast(MainActivity.this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
+                    if(opreate == IMPORT) {
+                        Constans.showToast(MainActivity.this, "导入成功！");
+                    } else {
+                        Constans.showToast(MainActivity.this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
+                    }
                     break;
                 default :
                     break;
@@ -77,6 +81,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void exportContacts(){
        if( contactsData.openDb()) {
            if (contactsData.checkIsImport()) {
+               opreate = EXPORT;
                progressDialog = getProgressBar();
                progressDialog.show();
                new Thread() {
@@ -94,6 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (contactsData.checkIsImport()) {
                 showDialog("联系人还未导出，是否导出？");
             } else {
+                opreate = IMPORT;
                 progressDialog = getProgressBar();
                 progressDialog.show();
                 new Thread() {
