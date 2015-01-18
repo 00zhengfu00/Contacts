@@ -16,10 +16,12 @@
   -->
 
 <resources>
+    <style name="AppTheme" parent="AppTheme.Base"/>
 
-    <string name="app_name">联系人助手</string>
-    <string name="import_btn">导入联系人</string>
-    <string name="export_btn">导出联系人</string>
-    <string name="quit_btn">退出</string>
-    <string name="importing">正在导出联系人..</string>
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorSecondaryDark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
 </resources>

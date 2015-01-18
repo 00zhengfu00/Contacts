@@ -1,12 +1,13 @@
 package com.zhangyan.contacts;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -14,8 +15,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.zhangyan.contacts.data.ContactsData;
-
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
     /**
      * Called when the activity is first created.
      */
@@ -30,6 +30,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button importBtn;
     @InjectView(R.id.quit_btn)
     Button quitBtn;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
     private ProgressBar progressBar;
     private TextView msg;
     private int opreate ;
@@ -44,6 +46,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void initView() {
         /* 注入视图 */
         ButterKnife.inject(this);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        setTitle(getResources().getString(R.string.app_name));
         /* 为控件设置点击事件 */
         exporttn.setOnClickListener(this);
         importBtn.setOnClickListener(this);
@@ -133,7 +140,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
         progressDialog.setCancelable(false);
         progressDialog.setMessage("正在读取联系人..");
-        progressDialog.setMax(0);
         return progressDialog;
     }
     @Override

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (C) 2014 Antonio Leiva Gordillo.
   ~
@@ -14,12 +15,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<resources>
-
-    <string name="app_name">联系人助手</string>
-    <string name="import_btn">导入联系人</string>
-    <string name="export_btn">导出联系人</string>
-    <string name="quit_btn">退出</string>
-    <string name="importing">正在导出联系人..</string>
-</resources>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:id="@+id/toolbar"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:background="@color/colorSecondaryDark"
+                                   android:minHeight="?attr/actionBarSize"/>

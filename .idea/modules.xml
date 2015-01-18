@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Contacts.iml" filepath="$PROJECT_DIR$/Contacts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../project/appcompat/appcompat.iml" filepath="$PROJECT_DIR$/../project/appcompat/appcompat.iml" />
     </modules>
   </component>
 </project>
