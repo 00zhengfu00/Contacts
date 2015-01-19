@@ -16,6 +16,7 @@ public class Constans {
     public static final int PROGRESS_MAX = 2;
     public static final int PROGRESS_DISMISS = 3;
     public static final int PROGRESS_INC = 4;
+    public static final int AUPDATA_LIST = 5;
     public static void showToast(Context context,String neirong){
         Toast toast = Toast.makeText(context.getApplicationContext(),
                 neirong, Toast.LENGTH_LONG);
@@ -42,5 +43,8 @@ public class Constans {
             message.setData(data);
         }
         handler.sendMessage(message);
+    }
+    public static void print(String text){
+        System.out.println(text);
     }
 }

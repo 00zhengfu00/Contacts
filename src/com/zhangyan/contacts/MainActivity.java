@@ -2,19 +2,25 @@ package com.zhangyan.contacts;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.zhangyan.contacts.data.ContactsData;
+import com.zhangyan.contacts.data.ContactsSingle;
+import com.zhangyan.contacts.strcut.Contacts;
+
+import java.util.ArrayList;
+
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
     /**
      * Called when the activity is first created.
@@ -30,6 +36,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     Button importBtn;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
+    @InjectView(R.id.listView)
+    ListView listView;
+    private MyAdapter adapter ;
+    private ArrayList<Contacts> contactList;
     private ProgressBar progressBar;
     private TextView msg;
     private int opreate ;
@@ -39,6 +49,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.main);
         contactsData = new ContactsData(this, handler);
         initView();
+        readContacts();
     }
 
     private void initView() {
@@ -51,8 +62,17 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         /* 为控件设置点击事件 */
         exporttn.setOnClickListener(this);
         importBtn.setOnClickListener(this);
+        /*  */
+        adapter = new MyAdapter(this, null);
+        listView.setAdapter(adapter);
     }
-
+    private void readContacts() {
+        new Thread() {
+            public void run() {
+                contactList = ContactsOperate.getContactsFromPhone(MainActivity.this, handler);
+            }
+        }.start();
+    }
     Handler handler = new Handler(){
         public void handleMessage(Message message){
             switch(message.what){
@@ -76,6 +96,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                         Constans.showToast(MainActivity.this, "已导出至" + ContactsData.SDCARD_PATH + ContactsData.CONTACTS_HELPER + ContactsData.CONTACTS_BACKUP);
                     }
                     break;
+                case Constans.AUPDATA_LIST:
+                    adapter.add(ContactsSingle.getInstance().getContacts());
+                    break;
                 default :
                     break;
             }
@@ -89,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                progressDialog.show();
                new Thread() {
                    public void run() {
-                       contactsData.addContacts(ContactsOperate.getContactsFromPhone(MainActivity.this, handler));
+                       contactsData.addContacts(contactList);
                    }
                }.start();
            } else {
@@ -149,6 +172,61 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             default:
                 break;
+        }
+    }
+
+    public class MyAdapter extends BaseAdapter{
+        private Context mContext;
+        private ArrayList<Contacts> contactses;
+        public MyAdapter(Context mContext, ArrayList<Contacts> contactses){
+            this.mContext = mContext;
+            this.contactses = contactses == null ? new ArrayList<Contacts>() : contactses;
+        }
+        @Override
+        public int getCount() {
+            return contactses.size();
+        }
+
+        @Override
+        public Contacts getItem(int position) {
+            return contactses.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        public void add(Contacts contacts){
+            this.contactses.add(contacts);
+            notifyDataSetChanged();
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if(convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.contacts_item, null);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.setValues(getItem(position));
+            return convertView;
+        }
+
+        class ViewHolder {
+            @InjectView(R.id.imageView) ImageView img;
+            @InjectView(R.id.contact_name) TextView name;
+            @InjectView(R.id.contact_phone) TextView phone;
+            public ViewHolder(View view){
+                ButterKnife.inject(this, view);
+            }
+            public void setValues(Contacts contacts){
+                name.setText(contacts.getName());
+                if(contacts.getPhoneId() > 0){
+                    phone.setText(contacts.getPhone().get(0).getValue());
+                }
+            }
         }
     }
 }

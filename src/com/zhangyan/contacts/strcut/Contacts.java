@@ -12,7 +12,7 @@ public class Contacts {
     /* 联系人姓名 */
     private String name ;
     /* 联系人头像 */
-    private Photo photo;
+//    private Photo photo;
     /* 联系人电话信息 */
     private int phoneId;
     private ArrayList<Attribute> phone;
@@ -26,7 +26,7 @@ public class Contacts {
     public Contacts () {
         setName("");
         setPhone(new ArrayList<Attribute>());
-        setPhoto(new Photo());
+//        setPhoto(new Photo());
         setEmail(new ArrayList<Attribute>());
         setAddress(new ArrayList<Attribute>());
         setGroup("");
@@ -82,13 +82,13 @@ public class Contacts {
         this.id = id;
     }
 
-    public Photo getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
+//    public Photo getPhoto() {
+//        return photo;
+//    }
+//
+//    public void setPhoto(Photo photo) {
+//        this.photo = photo;
+//    }
 
     public int getPhoneId() {
         return phoneId;

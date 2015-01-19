@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import com.zhangyan.contacts.data.ContactsSingle;
 import com.zhangyan.contacts.strcut.Attribute;
 import com.zhangyan.contacts.strcut.Contacts;
 
@@ -51,6 +52,7 @@ public class ContactsOperate {
                             )
                     );
                 }
+                phonesCursor.close();
             }
 //            /* --------------------------获取联系人邮件------------------------------- */
 //            Cursor emailCur = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contact.getId(), null, null);
@@ -67,7 +69,8 @@ public class ContactsOperate {
 //                );
 //            }
         contactses.add(contact);
-        Constans.sendMessage(Constans.PROGRESS_MAX, handler, contactses.size());
+        ContactsSingle.getInstance().setContacts(contact);
+        Constans.sendMessage(Constans.AUPDATA_LIST, handler);
         }
     return contactses;
     }
@@ -100,6 +103,7 @@ public class ContactsOperate {
                             android.provider.ContactsContract.Data.CONTENT_URI, contentValues);
                 }
             }
+
             Constans.sendMessage(Constans.PROGRESS_INC, handler);
         }
         Constans.sendMessage(Constans.PROGRESS_DISMISS, handler);
