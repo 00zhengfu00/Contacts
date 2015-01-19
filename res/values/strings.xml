@@ -22,4 +22,7 @@
     <string name="export_btn">导出联系人</string>
     <string name="quit_btn">退出</string>
     <string name="importing">正在导出联系人..</string>
+    <string name="action_operate">操作</string>
+    <string name="dial">拨号</string>
+    <string name="contacts">联系人</string>
 </resources>

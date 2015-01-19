@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,20 +28,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private static final int EXPORT = 1;
 
     private ContactsData contactsData;
-    ProgressDialog progressDialog;
-    @InjectView(R.id.export_btn)
-    Button exporttn;
-    @InjectView(R.id.import_btn)
-    Button importBtn;
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
-    @InjectView(R.id.listView)
-    ListView listView;
     private MyAdapter adapter ;
+    private ProgressDialog progressDialog;
+
     private ArrayList<Contacts> contactList;
     private ProgressBar progressBar;
     private TextView msg;
     private int opreate ;
+    /* 控件 */
+    @InjectView(R.id.listView)
+    ListView listView;
+    @InjectView(R.id.contacts_count)
+    TextView contactsCount;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,17 +48,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         initView();
         readContacts();
     }
-
     private void initView() {
         /* 注入视图 */
         ButterKnife.inject(this);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-        setTitle(getResources().getString(R.string.app_name));
         /* 为控件设置点击事件 */
-        exporttn.setOnClickListener(this);
-        importBtn.setOnClickListener(this);
         /*  */
         adapter = new MyAdapter(this, null);
         listView.setAdapter(adapter);
@@ -98,6 +88,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     break;
                 case Constans.AUPDATA_LIST:
                     adapter.add(ContactsSingle.getInstance().getContacts());
+                    contactsCount.setText("共" + message.getData().getInt("max") + "位联系人");
                     break;
                 default :
                     break;
@@ -164,12 +155,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.export_btn:
-                exportContacts();
-                break;
-            case R.id.import_btn:
-                importContacts();
-                break;
+
             default:
                 break;
         }

@@ -70,7 +70,7 @@ public class ContactsOperate {
 //            }
         contactses.add(contact);
         ContactsSingle.getInstance().setContacts(contact);
-        Constans.sendMessage(Constans.AUPDATA_LIST, handler);
+        Constans.sendMessage(Constans.AUPDATA_LIST, handler, contactses.size());
         }
     return contactses;
     }
