@@ -28,8 +28,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     Button exporttn;
     @InjectView(R.id.import_btn)
     Button importBtn;
-    @InjectView(R.id.quit_btn)
-    Button quitBtn;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     private ProgressBar progressBar;
@@ -53,7 +51,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         /* 为控件设置点击事件 */
         exporttn.setOnClickListener(this);
         importBtn.setOnClickListener(this);
-        quitBtn.setOnClickListener(this);
     }
 
     Handler handler = new Handler(){
@@ -149,9 +146,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case R.id.import_btn:
                 importContacts();
-                break;
-            case R.id.quit_btn:
-                System.exit(0);
                 break;
             default:
                 break;
