@@ -75,7 +75,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                     break;
                 case Constans.IMPORT:
-                    progressDialog.setMessage("正在导入联系人..");
+                    progressDialog.setTitle("正在导入联系人..");
                     break;
                 case Constans.PROGRESS_INC:
                     progressDialog.incrementProgressBy(1);
@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("正在读取联系人..");
+        progressDialog.setTitle("正在读取联系人..");
         return progressDialog;
     }
     @Override
