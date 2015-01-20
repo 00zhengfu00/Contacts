@@ -69,10 +69,10 @@ public class ContactsOperate {
 //                );
 //            }
         contactses.add(contact);
-        ContactsSingle.getInstance().setContacts(contact);
-        Constans.sendMessage(Constans.AUPDATA_LIST, handler, contactses.size());
+        ContactsSingle.getInstance().add(contact);
+        Constans.sendMessage(Constans.AUPDATA_LIST, handler);
         }
-    return contactses;
+        return contactses;
     }
 
     public static void saveContacts(Context mContext, ArrayList<Contacts> contactses, Handler handler){
@@ -105,6 +105,8 @@ public class ContactsOperate {
             }
 
             Constans.sendMessage(Constans.PROGRESS_INC, handler);
+            ContactsSingle.getInstance().add(contacts);
+            Constans.sendMessage(Constans.AUPDATA_LIST, handler);
         }
         Constans.sendMessage(Constans.PROGRESS_DISMISS, handler);
     }
