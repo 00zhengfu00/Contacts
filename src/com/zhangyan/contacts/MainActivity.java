@@ -36,10 +36,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private TextView msg;
     private int opreate ;
     /* 控件 */
-    @InjectView(R.id.listView)
-    ListView listView;
-    @InjectView(R.id.contacts_count)
-    TextView contactsCount;
+    @InjectView(R.id.listView) ListView listView;
+    @InjectView(R.id.contacts_count) TextView contactsCount;
+    @InjectView(R.id.import_btn) TextView import_btn;
+    @InjectView(R.id.export_btn) TextView export_btn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         ButterKnife.inject(this);
         /* 为控件设置点击事件 */
         /*  */
+        import_btn.setOnClickListener(this);
+        export_btn.setOnClickListener(this);
         adapter = new MyAdapter(this, null);
         listView.setAdapter(adapter);
     }
@@ -88,7 +90,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     break;
                 case Constans.AUPDATA_LIST:
                     adapter.add(ContactsSingle.getInstance().getContacts());
-                    contactsCount.setText("共" + message.getData().getInt("max") + "位联系人");
+                    ContactsSingle.getInstance().getContacts().clear();
+                    contactsCount.setText("共" + ContactsSingle.getInstance().getCount() + "位联系人");
                     break;
                 default :
                     break;
@@ -155,7 +158,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-
+            case R.id.import_btn:
+                importContacts();
+                break;
+            case R.id.export_btn:
+                exportContacts();
+                break;
             default:
                 break;
         }
@@ -182,8 +190,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         public long getItemId(int position) {
             return position;
         }
-        public void add(Contacts contacts){
-            this.contactses.add(contacts);
+        public void add(ArrayList<Contacts> contacts){
+            if(contacts != null) {
+                for(Contacts contacts1 : contacts)
+                this.contactses.add(contacts1);
+            }
             notifyDataSetChanged();
         }
         @Override
