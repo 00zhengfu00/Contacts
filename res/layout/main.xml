@@ -36,7 +36,7 @@
                 android:id="@+id/contacts_count" android:layout_alignBottom="@+id/textView5"
                 android:layout_alignRight="@+id/textView5" android:layout_alignEnd="@+id/textView5"
                 android:layout_marginRight="25dp" android:layout_marginEnd="25dp" android:textSize="11dp"
-                android:paddingBottom="2dp"/>
+                android:paddingBottom="2dp" android:textColor="@color/white"/>
     </RelativeLayout>
     <RelativeLayout
             android:layout_width="match_parent"
